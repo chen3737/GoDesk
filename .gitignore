@@ -1,2 +1,9 @@
 test/
 .worktrees/
+bin/
+obj/
+.vs/
+artifacts/
+TestResults/
+*.user
+*.suo

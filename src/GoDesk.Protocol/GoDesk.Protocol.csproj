@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="System.Formats.Cbor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GoDesk.Core\GoDesk.Core.csproj" />
+  </ItemGroup>
+</Project>

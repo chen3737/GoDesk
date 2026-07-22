@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoDesk.Core", "src\GoDesk.Core\GoDesk.Core.csproj", "{69BE8B76-3CD1-49C9-842D-B6DB2369F90A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoDesk.Protocol", "src\GoDesk.Protocol\GoDesk.Protocol.csproj", "{3A287191-90C2-4212-B73F-D7E560EBBA31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoDesk.Foundation.Verification", "verification\GoDesk.Foundation.Verification\GoDesk.Foundation.Verification.csproj", "{0F2647D0-A06C-49C0-B868-8190C2EB113B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{69BE8B76-3CD1-49C9-842D-B6DB2369F90A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69BE8B76-3CD1-49C9-842D-B6DB2369F90A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69BE8B76-3CD1-49C9-842D-B6DB2369F90A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69BE8B76-3CD1-49C9-842D-B6DB2369F90A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A287191-90C2-4212-B73F-D7E560EBBA31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A287191-90C2-4212-B73F-D7E560EBBA31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A287191-90C2-4212-B73F-D7E560EBBA31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A287191-90C2-4212-B73F-D7E560EBBA31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F2647D0-A06C-49C0-B868-8190C2EB113B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F2647D0-A06C-49C0-B868-8190C2EB113B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F2647D0-A06C-49C0-B868-8190C2EB113B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F2647D0-A06C-49C0-B868-8190C2EB113B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

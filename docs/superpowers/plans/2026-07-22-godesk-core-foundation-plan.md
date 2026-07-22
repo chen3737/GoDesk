@@ -1,5 +1,7 @@
 # GoDesk Core Foundation Implementation Plan
 
+> **状态：已完成（2026-07-22）。** 本文作为阶段 1 的历史执行说明保留。最终验收由 `scripts/verify.ps1` 提供：锁定依赖还原、Release 0 warning 构建和 20 项核心基础验证。实现已经过逐 Task 规格审查与质量审查，并包含审查要求的安全加固；若本文中的过程性片段与当前实现不一致，以代码为准。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the dependency-light, security-critical .NET 10 foundation for GoDesk: repository rules, device permissions, device IDs, bounded control framing, canonical CBOR hello messages, operation deduplication, and shared input guards.
@@ -77,7 +79,7 @@ No production project in this plan depends on WinUI, SQLite, QUIC, MCP, CNG, ser
 - Create: `verification/GoDesk.Foundation.Verification/GoDesk.Foundation.Verification.csproj`
 - Create: `verification/GoDesk.Foundation.Verification/ArchitectureFacts.cs`
 
-- [ ] **Step 1: Install and verify the pinned SDK**
+- [x] **Step 1: Install and verify the pinned SDK**
 
 Run from an elevated PowerShell only for installation:
 
@@ -93,7 +95,7 @@ dotnet --version
 
 Expected: `10.0.302` or a later `10.0.30x` patch accepted by `rollForward: latestPatch`. Do not continue with a preview SDK.
 
-- [ ] **Step 2: Initialize Git and preserve the approved specifications**
+- [x] **Step 2: Initialize Git and preserve the approved specifications**
 
 Run:
 
@@ -105,7 +107,7 @@ git commit -m "docs: add approved GoDesk specifications"
 
 Expected: a new root commit containing only `.gitignore` and `docs/`.
 
-- [ ] **Step 3: Add deterministic SDK, package and compiler policy**
+- [x] **Step 3: Add deterministic SDK, package and compiler policy**
 
 Create `global.json`:
 
@@ -196,7 +198,7 @@ TestResults/
 *.suo
 ```
 
-- [ ] **Step 4: Create the projects and solution**
+- [x] **Step 4: Create the projects and solution**
 
 Create `src/GoDesk.Core/GoDesk.Core.csproj`:
 
@@ -244,7 +246,7 @@ dotnet sln GoDesk.sln add verification/GoDesk.Foundation.Verification/GoDesk.Fou
 
 Expected: all three projects are listed by `dotnet sln GoDesk.sln list`.
 
-- [ ] **Step 5: Add and run the first verification**
+- [x] **Step 5: Add and run the first verification**
 
 Create `verification/GoDesk.Foundation.Verification/ArchitectureFacts.cs`:
 
@@ -272,7 +274,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification --configuration
 
 Expected: restore creates committed `packages.lock.json` files, build has zero warnings and errors, and 1 verification passes.
 
-- [ ] **Step 6: Commit the bootstrap**
+- [x] **Step 6: Commit the bootstrap**
 
 ```powershell
 git add .editorconfig .gitignore global.json Directory.Build.props Directory.Packages.props NuGet.config GoDesk.sln src verification
@@ -287,7 +289,7 @@ git commit -m "build: bootstrap GoDesk .NET foundation"
 - Create: `src/GoDesk.Core/Security/DevicePermissions.cs`
 - Create: `verification/GoDesk.Foundation.Verification/Core/DevicePermissionsTests.cs`
 
-- [ ] **Step 1: Write the failing permission tests**
+- [x] **Step 1: Write the failing permission tests**
 
 Create `verification/GoDesk.Foundation.Verification/Core/DevicePermissionsTests.cs`:
 
@@ -330,7 +332,7 @@ public sealed class DevicePermissionsTests
 }
 ```
 
-- [ ] **Step 2: Run the tests and verify the compile failure**
+- [x] **Step 2: Run the tests and verify the compile failure**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -338,7 +340,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: build fails because `GoDesk.Core.Security` and its types do not exist.
 
-- [ ] **Step 3: Implement stable capability bits and validated permissions**
+- [x] **Step 3: Implement stable capability bits and validated permissions**
 
 Create `src/GoDesk.Core/Security/DeviceCapability.cs`:
 
@@ -432,7 +434,7 @@ public readonly record struct DevicePermissions
 }
 ```
 
-- [ ] **Step 4: Run all verifications**
+- [x] **Step 4: Run all verifications**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -440,7 +442,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: 4 total verifications pass.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add src/GoDesk.Core/Security verification/GoDesk.Foundation.Verification/Core/DevicePermissionsTests.cs
@@ -455,7 +457,7 @@ git commit -m "feat: add device permission model"
 - Create: `src/GoDesk.Core/Identity/DeviceId.cs`
 - Create: `verification/GoDesk.Foundation.Verification/Core/DeviceIdTests.cs`
 
-- [ ] **Step 1: Write the failing identity tests**
+- [x] **Step 1: Write the failing identity tests**
 
 Create `verification/GoDesk.Foundation.Verification/Core/DeviceIdTests.cs`:
 
@@ -495,7 +497,7 @@ public sealed class DeviceIdTests
 }
 ```
 
-- [ ] **Step 2: Run and verify the compile failure**
+- [x] **Step 2: Run and verify the compile failure**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -503,7 +505,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: build fails because `Base32NoPadding` and `DeviceId` do not exist.
 
-- [ ] **Step 3: Implement Base32 without padding**
+- [x] **Step 3: Implement Base32 without padding**
 
 Create `src/GoDesk.Core/Identity/Base32NoPadding.cs`:
 
@@ -551,7 +553,7 @@ public static class Base32NoPadding
 }
 ```
 
-- [ ] **Step 4: Implement SHA-256 SPKI device IDs**
+- [x] **Step 4: Implement SHA-256 SPKI device IDs**
 
 Create `src/GoDesk.Core/Identity/DeviceId.cs`:
 
@@ -602,7 +604,7 @@ public readonly record struct DeviceId
 }
 ```
 
-- [ ] **Step 5: Run all verifications**
+- [x] **Step 5: Run all verifications**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -610,7 +612,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: 7 total verifications pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add src/GoDesk.Core/Identity verification/GoDesk.Foundation.Verification/Core/DeviceIdTests.cs
@@ -628,7 +630,7 @@ git commit -m "feat: derive canonical device IDs"
 - Create: `src/GoDesk.Protocol/Control/ControlFrameCodec.cs`
 - Create: `verification/GoDesk.Foundation.Verification/Protocol/ControlFrameCodecTests.cs`
 
-- [ ] **Step 1: Write the failing frame tests**
+- [x] **Step 1: Write the failing frame tests**
 
 Create `verification/GoDesk.Foundation.Verification/Protocol/ControlFrameCodecTests.cs`:
 
@@ -677,7 +679,7 @@ public sealed class ControlFrameCodecTests
 }
 ```
 
-- [ ] **Step 2: Run and verify the compile failure**
+- [x] **Step 2: Run and verify the compile failure**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -685,7 +687,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: build fails because the control framing types do not exist.
 
-- [ ] **Step 3: Add constants, discriminators and values**
+- [x] **Step 3: Add constants, discriminators and values**
 
 Create `src/GoDesk.Protocol/Control/ProtocolLimits.cs`:
 
@@ -753,7 +755,7 @@ public sealed class ProtocolFrameException : Exception
 }
 ```
 
-- [ ] **Step 4: Implement the fixed eight-byte header codec**
+- [x] **Step 4: Implement the fixed eight-byte header codec**
 
 Create `src/GoDesk.Protocol/Control/ControlFrameCodec.cs`:
 
@@ -826,7 +828,7 @@ public static class ControlFrameCodec
 }
 ```
 
-- [ ] **Step 5: Run all verifications**
+- [x] **Step 5: Run all verifications**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -834,7 +836,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: 11 total verifications pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add src/GoDesk.Protocol/Control verification/GoDesk.Foundation.Verification/Protocol/ControlFrameCodecTests.cs
@@ -849,7 +851,7 @@ git commit -m "feat: add bounded control framing"
 - Create: `src/GoDesk.Protocol/Handshake/HelloMessageCodec.cs`
 - Create: `verification/GoDesk.Foundation.Verification/Protocol/HelloMessageCodecTests.cs`
 
-- [ ] **Step 1: Write the failing CBOR tests**
+- [x] **Step 1: Write the failing CBOR tests**
 
 Create `verification/GoDesk.Foundation.Verification/Protocol/HelloMessageCodecTests.cs`:
 
@@ -912,7 +914,7 @@ public sealed class HelloMessageCodecTests
 }
 ```
 
-- [ ] **Step 2: Run and verify the compile failure**
+- [x] **Step 2: Run and verify the compile failure**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -920,7 +922,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: build fails because the hello message types do not exist.
 
-- [ ] **Step 3: Implement the validated hello value**
+- [x] **Step 3: Implement the validated hello value**
 
 Create `src/GoDesk.Protocol/Handshake/HelloMessage.cs`:
 
@@ -963,7 +965,7 @@ public sealed record HelloMessage
 }
 ```
 
-- [ ] **Step 4: Implement strict canonical CBOR**
+- [x] **Step 4: Implement strict canonical CBOR**
 
 Create `src/GoDesk.Protocol/Handshake/HelloMessageCodec.cs`:
 
@@ -1095,7 +1097,7 @@ public static class HelloMessageCodec
 }
 ```
 
-- [ ] **Step 5: Run all verifications**
+- [x] **Step 5: Run all verifications**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -1103,7 +1105,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: 14 total verifications pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add src/GoDesk.Protocol/Handshake verification/GoDesk.Foundation.Verification/Protocol/HelloMessageCodecTests.cs
@@ -1118,7 +1120,7 @@ git commit -m "feat: add canonical hello message codec"
 - Create: `src/GoDesk.Core/Operations/BoundedOperationSet.cs`
 - Create: `verification/GoDesk.Foundation.Verification/Core/BoundedOperationSetTests.cs`
 
-- [ ] **Step 1: Write the failing deduplication tests**
+- [x] **Step 1: Write the failing deduplication tests**
 
 Create `verification/GoDesk.Foundation.Verification/Core/BoundedOperationSetTests.cs`:
 
@@ -1161,7 +1163,7 @@ public sealed class BoundedOperationSetTests
 }
 ```
 
-- [ ] **Step 2: Run and verify the compile failure**
+- [x] **Step 2: Run and verify the compile failure**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -1169,7 +1171,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: build fails because the operation types do not exist.
 
-- [ ] **Step 3: Implement the operation identifier**
+- [x] **Step 3: Implement the operation identifier**
 
 Create `src/GoDesk.Core/Operations/OperationId.cs`:
 
@@ -1184,7 +1186,7 @@ public readonly record struct OperationId(Guid Value)
 }
 ```
 
-- [ ] **Step 4: Implement the thread-safe bounded set**
+- [x] **Step 4: Implement the thread-safe bounded set**
 
 Create `src/GoDesk.Core/Operations/BoundedOperationSet.cs`:
 
@@ -1235,7 +1237,7 @@ public sealed class BoundedOperationSet
 }
 ```
 
-- [ ] **Step 5: Run all verifications**
+- [x] **Step 5: Run all verifications**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -1243,7 +1245,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: 17 total verifications pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add src/GoDesk.Core/Operations verification/GoDesk.Foundation.Verification/Core/BoundedOperationSetTests.cs
@@ -1259,7 +1261,7 @@ git commit -m "feat: add bounded operation deduplication"
 - Create: `src/GoDesk.Core/Validation/InputGuard.cs`
 - Create: `verification/GoDesk.Foundation.Verification/Core/InputGuardTests.cs`
 
-- [ ] **Step 1: Write the failing boundary tests**
+- [x] **Step 1: Write the failing boundary tests**
 
 Create `verification/GoDesk.Foundation.Verification/Core/InputGuardTests.cs`:
 
@@ -1296,7 +1298,7 @@ public sealed class InputGuardTests
 }
 ```
 
-- [ ] **Step 2: Run and verify the compile failure**
+- [x] **Step 2: Run and verify the compile failure**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -1304,7 +1306,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: build fails because the validation types do not exist.
 
-- [ ] **Step 3: Implement stable error categories**
+- [x] **Step 3: Implement stable error categories**
 
 Create `src/GoDesk.Core/Validation/GoDeskErrorCode.cs`:
 
@@ -1359,7 +1361,7 @@ public sealed class GoDeskException : Exception
 }
 ```
 
-- [ ] **Step 4: Implement the reusable guards**
+- [x] **Step 4: Implement the reusable guards**
 
 Create `src/GoDesk.Core/Validation/InputGuard.cs`:
 
@@ -1412,7 +1414,7 @@ public static class InputGuard
 }
 ```
 
-- [ ] **Step 5: Run all verifications**
+- [x] **Step 5: Run all verifications**
 
 ```powershell
 dotnet run --project verification/GoDesk.Foundation.Verification
@@ -1420,7 +1422,7 @@ dotnet run --project verification/GoDesk.Foundation.Verification
 
 Expected: 20 total verifications pass.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```powershell
 git add src/GoDesk.Core/Validation verification/GoDesk.Foundation.Verification/Core/InputGuardTests.cs
@@ -1435,7 +1437,7 @@ git commit -m "feat: add bounded input validation"
 - Create: `docs/development.md`
 - Modify: `docs/superpowers/plans/2026-07-22-godesk-implementation-roadmap.md`
 
-- [ ] **Step 1: Add the repository verification script**
+- [x] **Step 1: Add the repository verification script**
 
 Create `scripts/verify.ps1`:
 
@@ -1476,7 +1478,7 @@ finally {
 }
 ```
 
-- [ ] **Step 2: Document the exact local workflow**
+- [x] **Step 2: Document the exact local workflow**
 
 Create `docs/development.md`:
 
@@ -1517,7 +1519,7 @@ git --version
 依赖版本集中在 `Directory.Packages.props`。更新后先执行普通 `dotnet restore` 更新 `packages.lock.json`，审查包来源、许可证和安全告警，再执行 `./scripts/verify.ps1`。不得在未更新锁文件的情况下提交包版本变化。
 ````
 
-- [ ] **Step 3: Run the complete verification from a clean build state**
+- [x] **Step 3: Run the complete verification from a clean build state**
 
 Run:
 
@@ -1545,7 +1547,7 @@ foreach ($buildDir in $buildDirs) {
 
 Expected: locked restore succeeds, Release build reports zero warnings and errors, 20 verifications pass, and the forbidden-folder check passes.
 
-- [ ] **Step 4: Mark phase 1 complete only after evidence is recorded**
+- [x] **Step 4: Mark phase 1 complete only after evidence is recorded**
 
 In `docs/superpowers/plans/2026-07-22-godesk-implementation-roadmap.md`, change the stage 1 heading to:
 
@@ -1559,7 +1561,7 @@ Add immediately below its artifact list:
 验收证据：`scripts/verify.ps1` 在 Release 配置下完成锁定还原、零警告构建和 20 项基础验证。
 ```
 
-- [ ] **Step 5: Commit the verified foundation**
+- [x] **Step 5: Commit the verified foundation**
 
 ```powershell
 git add scripts/verify.ps1 docs/development.md docs/superpowers/plans/2026-07-22-godesk-implementation-roadmap.md src verification

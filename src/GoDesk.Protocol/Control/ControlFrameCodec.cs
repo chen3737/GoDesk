@@ -58,9 +58,10 @@ public static class ControlFrameCodec
             throw new ProtocolFrameException("The control frame length does not match its header.");
         }
 
-        return new ControlFrame(
+        byte[] payload = frame[ProtocolLimits.ControlHeaderBytes..].ToArray();
+        return ControlFrame.FromOwnedPayload(
             version,
             messageType,
-            frame[ProtocolLimits.ControlHeaderBytes..].ToArray());
+            payload);
     }
 }

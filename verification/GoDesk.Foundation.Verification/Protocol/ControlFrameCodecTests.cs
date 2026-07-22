@@ -33,6 +33,47 @@ public sealed class ControlFrameCodecTests
         Assert.Equal(0x10, encoded[ProtocolLimits.ControlHeaderBytes]);
 
         ControlFrame decoded = ControlFrameCodec.Decode(encoded);
+        ControlFrame separatelyDecoded = ControlFrameCodec.Decode(encoded);
+
+        Assert.Equal(decoded, separatelyDecoded);
+        Assert.Equal(decoded.GetHashCode(), separatelyDecoded.GetHashCode());
+
+        ControlFrame differentPayload = new(
+            ProtocolLimits.CurrentVersion,
+            ControlMessageType.Hello,
+            new byte[] { 0x10, 0x20, 0x30, 0x41 });
+        Assert.NotEqual(decoded, differentPayload);
+
+        byte[] constructorPayload = [0xA0, 0xB0];
+        ReadOnlyMemory<byte> constructorMemory = constructorPayload;
+        ControlFrame constructed = new(
+            Version: ProtocolLimits.CurrentVersion,
+            MessageType: ControlMessageType.Pairing,
+            Payload: constructorMemory);
+        constructorPayload[0] = 0xFF;
+        Assert.Equal(new byte[] { 0xA0, 0xB0 }, constructed.Payload.ToArray());
+
+        (ushort deconstructedVersion, ControlMessageType deconstructedType, ReadOnlyMemory<byte> deconstructedPayload) =
+            decoded;
+        Assert.Equal(ProtocolLimits.CurrentVersion, deconstructedVersion);
+        Assert.Equal(ControlMessageType.Hello, deconstructedType);
+        Assert.Equal(new byte[] { 0x10, 0x20, 0x30, 0x40 }, deconstructedPayload.ToArray());
+
+        ControlFrame metadataChanged = constructed with
+        {
+            Version = ProtocolLimits.CurrentVersion + 1,
+            MessageType = ControlMessageType.Error,
+        };
+        Assert.Equal(ProtocolLimits.CurrentVersion + 1, metadataChanged.Version);
+        Assert.Equal(ControlMessageType.Error, metadataChanged.MessageType);
+        Assert.Equal(constructed.Payload, metadataChanged.Payload);
+
+        byte[] replacementPayload = [0xC0, 0xD0];
+        ReadOnlyMemory<byte> replacementMemory = replacementPayload;
+        ControlFrame payloadChanged = constructed with { Payload = replacementMemory };
+        replacementPayload[0] = 0xFF;
+        Assert.Equal(new byte[] { 0xC0, 0xD0 }, payloadChanged.Payload.ToArray());
+
         encoded[ProtocolLimits.ControlHeaderBytes] = 0xEE;
 
         Assert.Equal(ProtocolLimits.CurrentVersion, decoded.Version);
